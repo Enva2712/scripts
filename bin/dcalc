@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+prompt="Calculate:"
+bcconf="$CONFIG_DIR/bc"
+
+set -eo pipefail
+
+while true; do
+	value="$(echo "$value" | dmenu -p "$prompt" | bc -l "$bcconf")"
+done
