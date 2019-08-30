@@ -1,0 +1,8 @@
+#!/bin/sh
+
+pic="$(realpath "$1")"
+location="$HOME/.config/wallpaper"
+
+ln -sf "$pic" "$location"
+
+wal -i "$location"
