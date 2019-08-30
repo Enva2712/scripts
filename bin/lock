@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+wallpaper="$HOME/.config/wallpaper"
+lockscreen="$(mktemp)"
+
+. "$HOME/.cache/wal/colors.sh"
+
+for i in {0..15..1}; do
+	colorname="color$i"
+	declare "color$i=$(cut -c 2-7 <<< ${!colorname})"
+done
+
+
+misc=(	"-i" "$lockscreen" "-e" )
+clock=(	"--clock" "--time-font=Iosevka" )
+cols=(	"--indicator" "--radius=100" "--ring-width=5" \
+#	Default				Verifying			Wrong
+					"--veriftext=Checking"		"--wrongtext=Wrong"			"--noinputtext=" \
+	"--insidecolor=${color0}aa"	"--insidevercolor=${color0}aa"	"--insidewrongcolor=${color0}aa"	"--line-uses-inside" \
+	"--ringcolor=${color1}ff"	"--ringvercolor=${color2}ff"	"--ringwrongcolor=${color4}ff"		"--separatorcolor=${color1}ff" \
+	"--keyhlcolor=${color7}ff"					"--bshlcolor=${color8}ff" \
+	"--timecolor=${color7}ff"	"--verifcolor=${color7}ff"	"--wrongcolor=${color7}ff" \
+	"--datecolor=${color7}ff" )
+
+convert "$wallpaper" -crop "16:9" -resize "2560x1440" -paint 8 -blur 2 "$lockscreen"
+
+i3lock "${misc[@]}" "${cols[@]}" "${clock[@]}"
+
+rm "$lockscreen"
