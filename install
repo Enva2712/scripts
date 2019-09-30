@@ -20,7 +20,7 @@ install() {
 
 
 printf "Recursively link scripts in ./bin to %s? [y/N]: " "$bin_dir"
-read continue
+read -r continue
 
 case "$continue" in
 	[Yy]* ) install;;
