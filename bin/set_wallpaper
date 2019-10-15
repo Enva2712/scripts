@@ -5,4 +5,5 @@ location="$HOME/.config/wallpaper"
 
 ln -sf "$pic" "$location"
 
+wal -c
 wal -i "$location"
