@@ -10,7 +10,7 @@ msg() {
 
 install() {
 	for f in bin/**; do
-		f="$(realpath $f)"
+		f="$(realpath "$f")"
 		msg "Installing %s" "$f"
 		ln -sf "$f" "$bin_dir"
 	done
@@ -20,7 +20,7 @@ install() {
 
 
 printf "Recursively link scripts in ./bin to %s? [y/N]: " "$bin_dir"
-read continue
+read -r continue
 
 case "$continue" in
 	[Yy]* ) install;;
