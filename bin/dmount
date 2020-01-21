@@ -1,8 +1,24 @@
 #!/usr/bin/env bash
 
-MOUNTABLE_DEVICES="$(lsblk -r -p -o NAME,RM,SIZE,RO,TYPE,MOUNTPOINT | awk 'NR == 1 {next} $2 == 1 && $5 == "part" { print $1 }')"
+ACTIONS="mount
+unmount"
 
+if ACTION="$(dmenu -l 6 <<< "$ACTIONS")"; then
+	case "$ACTION" in
+		"mount")
+			AWKSCRIPT='NR==1 { next } $2 == "part" && $3 == 1 && !$4 {print $1}'
+			;;
+		"unmount")
+			AWKSCRIPT='NR==1 { next } $2 == "part" && $3 == 1 && $4 {print $1}'
+			;;
+		*)
+			echo "Action not recognized"
+			exit 1
+			;;
+	esac
 
-if CHOSEN_DEVICE="$(dmenu -l 6 -p "Mount:" <<< "$MOUNTABLE_DEVICES")"; then
-	udisksctl mount -b "$CHOSEN_DEVICE"
+	MOUNTABLE_DEVICES="$(lsblk -r -p -o NAME,TYPE,HOTPLUG,MOUNTPOINT | awk "$AWKSCRIPT")"
+	if CHOSEN_DEVICE="$(dmenu -l 6 -p "$ACTION:" <<< "$MOUNTABLE_DEVICES")"; then
+		notify-send -a dmount "$(udisksctl "$ACTION" -b "$CHOSEN_DEVICE")"
+	fi
 fi
