@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
+### dmount
+# Mount and unmount hotpluggable devices using dmenu and udiskctl
 
 ACTIONS="mount
 unmount"
@@ -18,8 +20,8 @@ if ACTION="$(dmenu -l 6 <<< "$ACTIONS")"; then
 			;;
 	esac
 
-	MOUNTABLE_DEVICES="$(lsblk -r -p -o NAME,TYPE,HOTPLUG,MOUNTPOINT | awk "$AWKSCRIPT")"
-	if CHOSEN_DEVICE="$(dmenu -l 6 -p "$ACTION:" <<< "$MOUNTABLE_DEVICES")"; then
+	HOTPLUG_DEVICES="$(lsblk -r -p -o NAME,TYPE,HOTPLUG,MOUNTPOINT | awk "$AWKSCRIPT")"
+	if CHOSEN_DEVICE="$(dmenu -l 6 -p "$ACTION:" <<< "$HOTPLUG_DEVICES")"; then
 		notify-send -a dmount "$(udisksctl "$ACTION" -b "$CHOSEN_DEVICE")"
 	fi
 fi
