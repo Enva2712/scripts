@@ -3,6 +3,12 @@
 wallpaper="$HOME/.config/wallpaper"
 lockscreen="$(mktemp)"
 
+cleanup() {
+	rm "$lockscreen"
+}
+
+trap cleanup EXIT
+
 . "$HOME/.cache/wal/colors.sh"
 
 for i in {0..15..1}; do
@@ -25,5 +31,3 @@ cols=(	"--indicator" "--radius=100" "--ring-width=5" \
 convert "$wallpaper" -crop "16:9" -resize "2560x1440" -paint 8 -blur 2 "$lockscreen"
 
 i3lock "${misc[@]}" "${cols[@]}" "${clock[@]}"
-
-rm "$lockscreen"
