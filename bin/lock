@@ -9,6 +9,7 @@ cleanup() {
 
 trap cleanup EXIT
 
+# shellcheck source=/home/enva2712/.cache/wal/colors.sh
 . "$HOME/.cache/wal/colors.sh"
 
 for i in {0..15..1}; do
