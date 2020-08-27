@@ -1,7 +1,10 @@
 #!/bin/sh
 
+# shellcheck source=/home/enva2712/.cache/wal/colors.sh
 . "$HOME/.cache/wal/colors.sh"
 
-choice=$(tmux list-sessions | dmenu -l 10 | sed -r 's/^(.+): .*$/\1/')
+choice=$(tmux list-sessions \
+	| dmenu -l 10 -sf "$background" -sb "$color1" -nf "$foreground" -nb "$background" \
+	| sed -r 's/^(.+): .*$/\1/')
 
 [ -n "$choice" ] && st -e tmux new -A -s "$choice"
