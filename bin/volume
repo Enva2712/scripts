@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+FIFO="/tmp/volume.wobfifo"
+
+function usage() {
+  cat <<EOF
+Usage: $(basename "$0") <up | down | mute>
+EOF
+  exit 1
+}
+
+function startwob() {
+  mkfifo "$FIFO"
+  trap 'rm -f "$FIFO"' INT TERM
+  tail -f "$FIFO" | wob
+  rm -f "$FIFO"
+}
+
+case "$1" in
+  down)
+    pactl set-sink-mute @DEFAULT_SINK@ 0
+    pactl set-sink-volume @DEFAULT_SINK@ -5%
+    ;;
+  up)
+    pactl set-sink-mute @DEFAULT_SINK@ 0
+    pactl set-sink-volume @DEFAULT_SINK@ +5%
+    ;;
+  mute)
+    pactl set-sink-mute @DEFAULT_SINK@ toggle
+    ;;
+  *) usage;;
+esac
+
+if [ ! -p "$FIFO" ]; then
+  startwob &
+fi
+
+if [ "$(pulsemixer --get-mute)" -lt 1 ];
+  then pulsemixer --get-volume | awk '{print $1}' > "$FIFO"
+  else echo 0 > "$FIFO"
+fi
