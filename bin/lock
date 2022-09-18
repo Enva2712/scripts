@@ -18,7 +18,7 @@ for i in {0..15..1}; do
 done
 
 
-misc=(	"-i" "$lockscreen" "-e" )
+misc=(	"-i" "$lockscreen" "-e" "--tiling" )
 clock=(	"--clock" "--time-font=Iosevka" )
 cols=(	"--indicator" "--radius=100" "--ring-width=5" \
 #	Default				Verifying			Wrong
@@ -29,6 +29,6 @@ cols=(	"--indicator" "--radius=100" "--ring-width=5" \
 	"--timecolor=${color7}ff"	"--verifcolor=${color7}ff"	"--wrongcolor=${color7}ff" \
 	"--datecolor=${color7}ff" )
 
-convert "$wallpaper" -crop "16:9" -resize "2560x1440" -paint 8 -blur 2 "$lockscreen"
+convert "$wallpaper" -resize "x2000" -paint 8 -blur 2 "$lockscreen"
 
 i3lock "${misc[@]}" "${cols[@]}" "${clock[@]}"

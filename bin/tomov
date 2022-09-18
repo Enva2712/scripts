@@ -1,0 +1,25 @@
+#!/bin/bash
+
+in="$1"
+out="${in//\.[^.]*/.mov}"
+
+function usage() {
+	cat <<EOF
+Usage: $0 input [output]
+EOF
+}
+
+if [ ! -f "$in" ]; then
+	usage
+fi
+
+if [ -f "$out" ]; then
+	printf "Output file '%s' already exists. Overwrite [y/N]: " "$out"
+	read -r overwrite;
+	echo
+	if [ "$overwrite" != y ]; then
+		exit 1
+	fi
+fi
+
+ffmpeg -i "$in" -c:v dnxhd -profile:v dnxhr_hq -pix_fmt yuv422p -c:a pcm_s16le -f mov "$out"
