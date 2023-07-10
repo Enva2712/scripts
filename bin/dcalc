@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
-prompt="Calculate:"
-bcconf="$CONFIG_DIR/bc"
 declare -a hist
-
+bcconf="$CONFIG_DIR/bc"
 set -Eeuo pipefail
 trap 'echo ${hist[1]}' EXIT
 
 while true; do
-	hist=("$(printf '%s\n' "${hist[@]}" | dmenu -p "$prompt" | bc -l "$bcconf")" "${hist[@]}")
+	hist=("$(printf '%s\n' "${hist[@]}" | dmenu -p "Calculate" | bc -l "$bcconf")" "${hist[@]}")
 done

@@ -1,0 +1,8 @@
+#!/bin/sh
+pic="$(realpath "$1")"
+location="$HOME/.config/wallpaper"
+ln -sf "$pic" "$location"
+wal -c
+wal -i "$location" -a 80 -n
+swww img "$location" --transition-type wipe --transition-angle 170
+pywalfox update

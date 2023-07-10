@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# entr -cs statusbar <<< "$(which $0)"
+
+while echo -e "$(< /sys/class/power_supply/BAT0/capacity)% ┊ $(date +'%Y-%m-%d') ┊ $(date +'%I:%M:%S %p')"; do sleep 1; done

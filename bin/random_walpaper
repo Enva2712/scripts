@@ -1,2 +1,0 @@
-#!/bin/sh
-find "$HOME/pics/wallpapers/wg" | shuf -n1 | xargs set_wallpaper

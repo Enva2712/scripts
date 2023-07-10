@@ -1,34 +1,23 @@
 #!/usr/bin/env bash
-
-wallpaper="$HOME/.config/wallpaper"
-lockscreen="$(mktemp)"
-
-cleanup() {
-	rm "$lockscreen"
-}
-
-trap cleanup EXIT
-
 # shellcheck source=/home/enva2712/.cache/wal/colors.sh
 . "$HOME/.cache/wal/colors.sh"
+set -euo pipefail
 
 for i in {0..15..1}; do
 	colorname="color$i"
-	declare "color$i=$(cut -c 2-7 <<< ${!colorname})"
+	declare "color$i=$(cut -c 2-7 <<<"${!colorname}")"
 done
 
+lockscreen="$HOME/.cache/lockscreen"
+lockicon="/usr/share/icons/Adwaita/32x32/status/system-lock-screen-symbolic.symbolic.png" # FIXME: janky
+if [ ! -e "$lockscreen" ] || [ "$wallpaper" -nt "$lockscreen" ] || [ "$(which "$0")" -nt "$lockscreen" ]; then
+	convert "$wallpaper" -blur 20x20 "${lockicon}[50x50]" -gravity center -composite "$lockscreen"
+fi
 
-misc=(	"-i" "$lockscreen" "-e" "--tiling" )
-clock=(	"--clock" "--time-font=Iosevka" )
-cols=(	"--indicator" "--radius=100" "--ring-width=5" \
-#	Default				Verifying			Wrong
-					"--veriftext=Checking"		"--wrongtext=Wrong"			"--noinputtext=" \
-	"--insidecolor=${color0}aa"	"--insidevercolor=${color0}aa"	"--insidewrongcolor=${color0}aa"	"--line-uses-inside" \
-	"--ringcolor=${color1}ff"	"--ringvercolor=${color2}ff"	"--ringwrongcolor=${color4}ff"		"--separatorcolor=${color1}ff" \
-	"--keyhlcolor=${color7}ff"					"--bshlcolor=${color8}ff" \
-	"--timecolor=${color7}ff"	"--verifcolor=${color7}ff"	"--wrongcolor=${color7}ff" \
-	"--datecolor=${color7}ff" )
-
-convert "$wallpaper" -resize "x2000" -paint 8 -blur 2 "$lockscreen"
-
-i3lock "${misc[@]}" "${cols[@]}" "${clock[@]}"
+swaylock -i "$lockscreen" -e \
+	--font iosevka --font-size 24 \
+	--indicator-idle-visible --indicator-radius 100 --indicator-thickness 10 --line-uses-inside \
+	--key-hl-color $color1 --bs-hl-color $color3 --separator-color=$color7 \
+	--text-color   $color7    --text-ver-color $color7       --text-wrong-color $color7       --text-clear-color $color7 \
+	--ring-color   $color7    --ring-ver-color $color1       --ring-wrong-color $color2       --ring-clear-color $color3 \
+	--inside-color 00000000 --inside-ver-color ${color0}aa --inside-wrong-color ${color0}aa --inside-clear-color ${color0}aa
