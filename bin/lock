@@ -10,11 +10,15 @@ done
 
 lockscreen="$HOME/.cache/lockscreen"
 lockicon="/usr/share/icons/Adwaita/32x32/status/system-lock-screen-symbolic.symbolic.png" # FIXME: janky
-if [ ! -e "$lockscreen" ] || [ "$wallpaper" -nt "$lockscreen" ] || [ "$(which "$0")" -nt "$lockscreen" ]; then
+
+# we can't use [ a -nt b ] b/c test derefs symlinks
+papemod="$(date +%s -d "$(stat "$wallpaper" | awk '/Modify/ { print $2 " " $3 }')")"
+lockmod="$(date +%s -d "$(stat "$lockscreen" | awk '/Modify/ { print $2 " " $3 }')")"
+if [ ! -e "$lockscreen" ] || [ "$papemod" -gt "$lockmod" ] || [ "$(which "$0")" -nt "$lockscreen" ]; then
 	convert "$wallpaper" -blur 20x20 "${lockicon}[50x50]" -gravity center -composite "$lockscreen"
 fi
 
-swaylock -i "$lockscreen" -e \
+swaylock -i "$lockscreen" \
 	--font iosevka --font-size 24 \
 	--indicator-idle-visible --indicator-radius 100 --indicator-thickness 10 --line-uses-inside \
 	--key-hl-color $color1 --bs-hl-color $color3 --separator-color=$color7 \

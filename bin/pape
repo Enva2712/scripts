@@ -1,8 +1,10 @@
-#!/bin/sh
-pic="$(realpath "$1")"
+#!/usr/bin/env bash
+set -euo pipefail
+pic="${1:-"$(find "/home/enva2712/pics/wallpapers" -type f | shuf -n1)"}"
+pic="$(realpath "$pic")"
 location="$HOME/.config/wallpaper"
 ln -sf "$pic" "$location"
 wal -c
-wal -i "$location" -a 80 -n
+wal -i "$location" -a 80 -n >/dev/null 2>&1
 swww img "$location" --transition-type wipe --transition-angle 170
 pywalfox update

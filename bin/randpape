@@ -1,2 +1,2 @@
-#!/bin/sh
-find "$HOME/pics/wallpapers/wg" | shuf -n1 | xargs pape
+#!/usr/bin/env bash
+"$(dirname "$(which "$0")")/pape" "$(find "/home/enva2712/pics/wallpapers" | shuf -n1)"
