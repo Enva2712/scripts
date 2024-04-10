@@ -9,7 +9,7 @@ for i in {0..15..1}; do
 done
 
 lockscreen="$HOME/.cache/lockscreen"
-lockicon="/usr/share/icons/Adwaita/32x32/status/system-lock-screen-symbolic.symbolic.png" # FIXME: janky
+lockicon="/home/enva2712/pics/lock.png" # FIXME: janky
 
 # we can't use [ a -nt b ] b/c test derefs symlinks
 papemod="$(date +%s -d "$(stat "$wallpaper" | awk '/Modify/ { print $2 " " $3 }')")"
