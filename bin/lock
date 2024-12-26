@@ -15,7 +15,7 @@ lockicon="/home/enva2712/pics/lock.png" # FIXME: janky
 papemod="$(date +%s -d "$(stat "$wallpaper" | awk '/Modify/ { print $2 " " $3 }')")"
 lockmod="$(date +%s -d "$(stat "$lockscreen" | awk '/Modify/ { print $2 " " $3 }')")"
 if [ ! -e "$lockscreen" ] || [ "$papemod" -gt "$lockmod" ] || [ "$(which "$0")" -nt "$lockscreen" ]; then
-	convert "$wallpaper" -blur 20x20 "${lockicon}[50x50]" -gravity center -composite "$lockscreen"
+	magick "$wallpaper" -blur 80x80 "${lockicon}[50x50]" -gravity center -composite "$lockscreen"
 fi
 
 swaylock -i "$lockscreen" \
